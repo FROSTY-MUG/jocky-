@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use JOCKY in academic work, please cite it."
+title: "JOCKY: A Consent-Bound DFIR Platform"
+authors:
+  - family-names: "Arora"
+    given-names: "Aryan"
+version: 0.1.0
+date-released: 2026-09-27
+license: Apache-2.0
+repository-code: "https://github.com/FROSTY-MUG/jocky-"
+abstract: "A programming language, compiler framework, agent runtime, and central management platform for authorized computer and network forensic analysis in environments where security tooling has been degraded, blinded, or disabled by an adversary."
+keywords:
+  - "DFIR"
+  - "incident response"
+  - "compiler"
+  - "LLVM"
+  - "forensic analysis"
+  - "blue team"

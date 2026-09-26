@@ -6,10 +6,12 @@ pub mod lexer;
 pub mod parser;
 pub mod passes;
 pub mod prelude;
+pub mod jkm;
 
 pub use ast::*;
 pub use codegen::{emit_object, emit_object_with_ir, CodegenError};
 pub use diag::{Diagnostic, ErrorCode};
+pub use jkm::{JkmContainer, JkmManifest};
 pub use lexer::{tokenize, Token};
 pub use parser::Parser;
 pub use passes::typecheck::typecheck;

@@ -5,6 +5,8 @@ edition.workspace = true
 license.workspace = true
 description = "JOCKY DFIR-domain compiler: lexer, parser, HIR, MIR, passes, and LLVM codegen"
 readme = "README.md"
+# `cargo run -p jockyc -- build ...` must select the compiler, not the verifier.
+default-run = "jockyc"
 
 [dependencies]
 logos = "0.14"
@@ -20,6 +22,19 @@ anyhow = "1.0"
 jocky-common = { path = "../agent/common" }
 inkwell = { version = "0.4", features = ["llvm17-0"] }
 llvm-sys = "170"
+rand_chacha = "0.3"
+hex = "0.4"
+blake3 = "1.5"
+ciborium = "0.2"
+signature = "2.2"
 
 [features]
 default = []
+
+[[bin]]
+name = "jockyc"
+path = "src/main.rs"
+
+[[bin]]
+name = "jocky-verify"
+path = "src/bin/jocky-verify.rs"

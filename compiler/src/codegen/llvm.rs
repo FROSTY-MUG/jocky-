@@ -1113,8 +1113,13 @@ fn emit_object_internal(
     out_path: &Path,
     emit_ir: bool,
 ) -> Result<(), CodegenError> {
-    Target::initialize_x86(&InitializationConfig::default());
+    Target::initialize_all(&InitializationConfig::default());
     let triple = TargetTriple::create(target);
+    let reloc_mode = if target.contains("windows") {
+        RelocMode::Default
+    } else {
+        RelocMode::PIC
+    };
     let target_machine = Target::from_triple(&triple)
         .map_err(|e| CodegenError::LlvmError(e.to_string()))?
         .create_target_machine(
@@ -1122,7 +1127,7 @@ fn emit_object_internal(
             "generic",
             "",
             OptimizationLevel::None,
-            RelocMode::PIC,
+            reloc_mode,
             CodeModel::Default,
         )
         .ok_or_else(|| CodegenError::LlvmError("Failed to create TargetMachine".to_string()))?;
