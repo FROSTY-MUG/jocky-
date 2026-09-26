@@ -1,5 +1,5 @@
 use clap::{Parser as ClapParser, Subcommand};
-use jockyc::{check_source, parse, tokenize, Diagnostic};
+use jockyc::{check_source, emit_object_with_ir, parse, tokenize, typecheck, Diagnostic};
 use std::fs;
 use std::path::PathBuf;
 use std::process;
@@ -41,6 +41,23 @@ enum Commands {
         /// Source file path (.jky)
         file: PathBuf,
     },
+    /// Compile source file to an object file
+    Build {
+        /// Source file path (.jky)
+        file: PathBuf,
+
+        /// Target triple (e.g. x86_64-unknown-linux-gnu)
+        #[arg(long, default_value = "x86_64-unknown-linux-gnu")]
+        target: String,
+
+        /// Output path (.o)
+        #[arg(long)]
+        out: PathBuf,
+
+        /// Also emit LLVM IR text (.ll)
+        #[arg(long)]
+        emit_ir: bool,
+    },
 }
 
 fn main() {
@@ -50,6 +67,12 @@ fn main() {
         Some(Commands::Check { file }) => run_check(&file),
         Some(Commands::EmitAst { file }) => run_emit_ast(&file),
         Some(Commands::EmitTokens { file }) => run_emit_tokens(&file),
+        Some(Commands::Build {
+            file,
+            target,
+            out,
+            emit_ir,
+        }) => run_build(&file, &target, &out, emit_ir),
         None => {
             if let Some(file) = cli.file {
                 if cli.emit_ast {
@@ -96,6 +119,44 @@ fn run_check(path: &PathBuf) {
             process::exit(1);
         }
     }
+}
+
+fn run_build(file: &PathBuf, target: &str, out: &PathBuf, emit_ir: bool) {
+    let source = read_source(file);
+    let filename = file.to_string_lossy();
+
+    // 1. Lex + parse the file
+    let program = match parse(&source) {
+        Ok(p) => p,
+        Err(d) => {
+            print_diagnostics(&[d], &source, &filename);
+            process::exit(1);
+        }
+    };
+
+    // 2. Run denylist pass. If any diagnostic, print + exit 1.
+    if let Err(diags) = jockyc::passes::denylist::check(&program) {
+        print_diagnostics(&diags, &source, &filename);
+        process::exit(1);
+    }
+
+    // 3. Run typechecker. If any diagnostic, print + exit 1.
+    let hir = match typecheck(&program) {
+        Ok(h) => h,
+        Err(diags) => {
+            print_diagnostics(&diags, &source, &filename);
+            process::exit(1);
+        }
+    };
+
+    // 4. Run codegen. If error, print + exit 1.
+    if let Err(err) = emit_object_with_ir(&hir, target, out, emit_ir) {
+        eprintln!("error: codegen failed: {}", err);
+        process::exit(1);
+    }
+
+    // 5. Print "OK: <path> -> <out_path>"
+    println!("OK: {} -> {}", file.display(), out.display());
 }
 
 fn run_emit_ast(path: &PathBuf) {
