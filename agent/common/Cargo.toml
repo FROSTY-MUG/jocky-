@@ -1,0 +1,17 @@
+[package]
+name = "jocky-common"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Shared types, protocol shapes, and attestation primitives for the JOCKY DFIR platform."
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+ed25519-dalek = { version = "2.1", features = ["pem"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.10", features = ["v4", "serde"] }
+anyhow = "1.0"
+zeroize = "1.7"
+# serde_json is required to produce the canonical JSON signing payloads used by
+# the consent and manifest attestation types.
+serde_json = "1.0"

@@ -1,0 +1,17 @@
+// JOCKY Stdlib: Code Injection & Memory Tamper Detection Module
+fn detect_code_injection() -> [Finding] {
+    let procs = scan_processes();
+    let mut findings = [];
+    for p in procs {
+        let unbacked = unbacked_pages(p.pid());
+        if unbacked.len() > 0 {
+            findings.push(Finding {
+                severity: Severity::High,
+                title: "Suspicious In-Memory Execution / Code Injection Detected",
+                evidence: p.name(),
+                mitre: "T1055.002",
+            });
+        }
+    }
+    return findings;
+}

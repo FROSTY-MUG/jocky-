@@ -1,0 +1,16 @@
+// JOCKY Stdlib: Network Flow Tracer & Socket Mapper
+fn trace_network_anomalies() -> [Finding] {
+    let flows = trace_network_flows(Duration::from_secs(60));
+    let mut findings = [];
+    for flow in flows {
+        if flow.dest_port() == 443 && flow.is_unusual_frequency() {
+            findings.push(Finding {
+                severity: Severity::Medium,
+                title: "Potential Periodic Network Beacon",
+                evidence: flow.to_json(),
+                mitre: "T1071.001",
+            });
+        }
+    }
+    return findings;
+}

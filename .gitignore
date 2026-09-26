@@ -1,0 +1,37 @@
+# Rust
+target/
+**/target/
+*.rs.bk
+
+# Build outputs
+*.jkm
+*.o
+*.obj
+*.sig
+*.sbom.json
+
+# Secrets and keys
+*.key
+*.pem
+*.b64
+.env
+.env.*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.kilo/
+.lean_ai/
+*.swp
+
+# Node (frontend, if present)
+node_modules/
+frontend/dist/
+
+# Logs and scratch
+*.log
+/tmp/
+scratch/
+test_bad.jky

@@ -1,0 +1,25 @@
+name: JOCKY CI Pipeline & Attested Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Run Polymorphic Diversification Driver
+        run: |
+          chmod +x ci/diversify.sh ci/sign.sh
+          ./ci/diversify.sh stdlib/jocky/process.jky 4 dist/variants
+          ./ci/sign.sh
+          python ci/registry.py build-test-001 dist/variants/variant_1.bin

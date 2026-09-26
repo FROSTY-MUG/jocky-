@@ -1,0 +1,19 @@
+// JOCKY Stdlib: Process Analysis & Suspicious Parent-Child Correlator
+fn detect_suspicious_parents() -> [Finding] {
+    let procs = scan_processes();
+    let mut findings = [];
+    for p in procs {
+        let parent = p.parent();
+        if parent.name() in ["winword.exe", "excel.exe", "outlook.exe"] {
+            if p.name() in ["powershell.exe", "cmd.exe", "wscript.exe", "mshta.exe"] {
+                findings.push(Finding {
+                    severity: Severity::High,
+                    title: "Office spawns script host",
+                    evidence: p.pid(),
+                    mitre: "T1566.001",
+                });
+            }
+        }
+    }
+    return findings;
+}

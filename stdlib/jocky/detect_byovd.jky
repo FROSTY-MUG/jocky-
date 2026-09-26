@@ -1,0 +1,18 @@
+// JOCKY Stdlib: Defensive BYOVD Driver Blocklist Scanner
+fn detect_byovd() -> [Finding] {
+    let drivers = enum_kernel_drivers();
+    let blocklist = load_loldrivers_blocklist();
+    let mut findings = [];
+    for d in drivers {
+        let h = sha256(d.path());
+        if blocklist.contains(h) {
+            findings.push(Finding {
+                severity: Severity::Critical,
+                title: "Known Vulnerable Driver (BYOVD Target) Loaded",
+                evidence: d.path(),
+                mitre: "T1068",
+            });
+        }
+    }
+    return findings;
+}

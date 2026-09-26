@@ -1,0 +1,19 @@
+// JOCKY Stdlib: Memory Triage for RWX & Unbacked Executable Regions
+fn detect_memory_anomalies() -> [Finding] {
+    let procs = scan_processes();
+    let mut findings = [];
+    for p in procs {
+        let regions = rwx_regions(p.pid());
+        for r in regions {
+            if !r.is_file_backed() {
+                findings.push(Finding {
+                    severity: Severity::Critical,
+                    title: "Unbacked RWX Executable Memory Region Detected",
+                    evidence: r.address(),
+                    mitre: "T1055",
+                });
+            }
+        }
+    }
+    return findings;
+}

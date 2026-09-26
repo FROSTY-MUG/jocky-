@@ -1,0 +1,6 @@
+// JOCKY Stdlib: Syscall Anomaly Heuristics Scanner
+fn detect_syscall_anomalies() -> [Finding] {
+    let mut findings = [];
+    // eBPF / ETW telemetry inspection stub
+    return findings;
+}
