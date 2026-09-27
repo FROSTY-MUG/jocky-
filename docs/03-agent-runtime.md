@@ -2,9 +2,9 @@
 
 | Platform | Language | Why |
 |---|---|---|
-| Windows agent | **Rust** (primary) + small C++ shims for ETW/WMI interop via `windows-rs` / `cxx` | Memory safety in a parser of untrusted job data; `windows-rs` gives typed NTAPI/Win32 access without hand-rolled vtable plumbing |
-| Linux agent | **C** for the eBPF programs (required by the verifier/libbpf), **Rust** for the user-space loader and collectors | eBPF must be C (or Rust with `aya`, but C+libbpf is the most debuggable path); user space in Rust for the same safety reason |
-| Shared | `jocky-rt` Rust crate (module format, verification, sandbox, output encoding) | One implementation of the security-critical parts, two thin platform layers |
+| Windows agent | **C++20** (`jocky-agent-win`) + **Rust FFI** (`jocky-common`) | Direct Win32 ETW trace consumers, NTAPI process enumeration (`PROCESS_QUERY_LIMITED_INFORMATION`), BCrypt hashing, and native in-process module mapping without remote injection or reflective loaders |
+| Linux agent | **C** for eBPF programs, **Rust** for user-space loader and collectors | eBPF verifier compliance; memory safety in userspace |
+| Shared | `jocky-common` Rust crate (cdylib + C header `jocky.h`) | Shared Ed25519 consent verification (`jocky_consent_token_verify`), `.jkm` container verification (`jocky_jkm_verify`), and attestation primitives |
 
 ---
 

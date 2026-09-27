@@ -157,6 +157,46 @@ impl ConsentToken {
         }
         Ok(())
     }
+
+    /// Serialize token (including signature) to CBOR bytes.
+    pub fn to_cbor(&self) -> Result<Vec<u8>, anyhow::Error> {
+        let mut buf = Vec::new();
+        ciborium::into_writer(self, &mut buf)?;
+        Ok(buf)
+    }
+
+    /// Deserialize token from CBOR bytes.
+    pub fn from_cbor(bytes: &[u8]) -> Result<Self, anyhow::Error> {
+        let token: Self = ciborium::from_reader(bytes)?;
+        Ok(token)
+    }
+}
+
+/// Issue and sign a consent token.
+pub fn issue(
+    signing_key: &SigningKey,
+    agent_id: impl Into<String>,
+    scope: impl Into<String>,
+    ttl_seconds: i64,
+    max_ops: u64,
+    policy_version: u32,
+) -> Result<ConsentToken, ConsentError> {
+    let nonce = format!("nonce-{}", uuid::Uuid::new_v4());
+    let mut token = ConsentToken::new(
+        agent_id,
+        scope,
+        ttl_seconds,
+        policy_version.to_string(),
+        max_ops,
+        nonce,
+    );
+    token.sign(signing_key);
+    Ok(token)
+}
+
+/// Verify a consent token against an Ed25519 VerifyingKey.
+pub fn verify(token: &ConsentToken, verifying_key: &VerifyingKey) -> Result<(), ConsentError> {
+    token.verify(verifying_key.as_bytes())
 }
 
 impl Zeroize for ConsentToken {

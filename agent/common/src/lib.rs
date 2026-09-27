@@ -10,3 +10,4 @@ pub mod consent;
 pub mod manifest;
 pub mod protocol;
 pub mod constants;
+pub mod ffi;

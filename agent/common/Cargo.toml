@@ -5,6 +5,9 @@ edition.workspace = true
 license.workspace = true
 description = "Shared types, protocol shapes, and attestation primitives for the JOCKY DFIR platform."
 
+[lib]
+crate-type = ["rlib", "cdylib"]
+
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 ed25519-dalek = { version = "2.1", features = ["pem"] }
@@ -15,3 +18,11 @@ zeroize = "1.7"
 # serde_json is required to produce the canonical JSON signing payloads used by
 # the consent and manifest attestation types.
 serde_json = "1.0"
+ciborium = "0.2"
+sha2 = "0.10"
+blake3 = "1.5"
+clap = { version = "4.4", features = ["derive"] }
+
+[[bin]]
+name = "jocky-token-issue"
+path = "src/bin/jocky-token-issue.rs"
