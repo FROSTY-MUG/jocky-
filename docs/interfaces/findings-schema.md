@@ -2,7 +2,7 @@
 
 **Status:** FROZEN  
 **Date:** 2026-09-28  
-**Source of Truth:** [`agent/common/src/protocol.rs`](file:///c:/Users/Aryan/Desktop/sihmaim/agent/common/src/protocol.rs) (`Finding` struct)  
+**Source of Truth:** [`agent/common/src/protocol.rs`](../../agent/common/src/protocol.rs) (`Finding` struct)  
 **Consumer Implementations:**  
 - Endpoint Agents (`agent/windows-cpp`, `agent/linux`, `agent/macos-swift`)
 - Central Manager (`manager/go`)

@@ -2,7 +2,7 @@
 
 **Status:** FROZEN  
 **Date:** 2026-09-28  
-**Source of Truth:** [`agent/common/src/consent.rs`](file:///c:/Users/Aryan/Desktop/sihmaim/agent/common/src/consent.rs)  
+**Source of Truth:** [`agent/common/src/consent.rs`](../../agent/common/src/consent.rs)  
 **Consumer Implementations:**  
 - Rust agent runtime & FFI: `agent/common`
 - Windows C++ agent runtime: `agent/windows-cpp/src/consent.cpp`

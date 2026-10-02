@@ -17,9 +17,9 @@ Problem Statement: **SIH26148 (NTRO)** — *"Creation of scripts/functions with 
 | **STEP 1.5** | Compiler Frontend | **COMPLETE** | Lexer (`logos`), AST, recursive-descent parser, denylist pass, typechecker. |
 | **STEP 2A** | LLVM 17 Code Generation | **COMPLETE** | Emits valid SysV x86_64 ELF objects via `inkwell` and LLVM 17 (conda-forge). |
 | **STEP 2B** | Diversification, .jkm, Signing, COFF | **COMPLETE** | 4 diversification passes, `.jkm` container, Ed25519 sign/verify, Windows COFF target, multi-language CI toolchain. |
-| **STEP 3** | Agents, Manager, Frontend | **NOT STARTED** | Language scaffolds verified (C++20 Windows, C eBPF Linux, Swift macOS, Go manager). Logic deferred to Step 3. |
+| **STEP 3** | Agents, Manager, Frontend | **COMPLETE** | Full RESTful Go Central Manager with SHA-256 audit chaining & RFC 8949 consent issuance; modern React 18/Vite/Tailwind DFIR dashboard with live script IDE, AST denylist verification & polymorphic simulation; Windows agent in-process loader. |
 
-All 110 automated tests in the test suite pass with zero failures.
+All automated tests in the test suite pass with zero failures (including 100% Go manager tests and frontend build validation).
 
 ---
 
@@ -119,13 +119,14 @@ sihmaim/
   - On Windows: Conda-forge `llvmdev` in an isolated conda environment:
 
     ```powershell
-    $env:LLVM_SYS_170_PREFIX = "C:\Users\Aryan\miniconda3\envs\llvm17\Library"
-    $env:Path = "C:\Users\Aryan\miniconda3\envs\llvm17\Library\bin;" + $env:Path
+    $env:LLVM_SYS_170_PREFIX = "$HOME\miniconda3\envs\llvm17\Library" # Or your LLVM 17 install path
+    $env:Path = "$env:LLVM_SYS_170_PREFIX\bin;" + $env:Path
     ```
 
   - On Linux: `sudo apt-get install llvm-17-dev clang-17`
-- **Go**: 1.22+ (for CI artifact manager)
-- **Python**: 3.10+ with `blake3` and `ciborium`
+- **Go**: 1.22+ (for CI artifact manager and Manager service)
+- **Python**: 3.10+ with `blake3`
+- **Node.js**: 18+ (for frontend dashboard)
 
 ### Building the Compiler
 
@@ -137,6 +138,23 @@ cargo build --workspace
 
 ```bash
 cargo test -p jockyc -- --nocapture
+```
+
+### Running the Central Manager Service (Go)
+
+```bash
+cd manager/go
+go test -v ./...
+go run ./cmd/jocky-manager -addr :8080
+```
+
+### Running the DFIR Operations Dashboard (React / Vite)
+
+```bash
+cd frontend
+npm install
+npm run dev
+# Dashboard accessible at http://localhost:5173
 ```
 
 ---
@@ -213,33 +231,33 @@ The test suite covers:
 
 ## 10. Documentation Index
 
-- [00-blueprint.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/00-blueprint.md): Complete architecture blueprint, constraints, and non-goals.
-- [01-threat-model.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/01-threat-model.md): Threat model, trust boundaries, and consent framework.
-- [02-language-and-compiler.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/02-language-and-compiler.md): JOCKY language grammar and compiler architecture.
-- [03-typechecker-and-codegen.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/03-typechecker-and-codegen.md): Type system, HIR, and LLVM 17 IR lowering.
-- [03-agent-runtime.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/03-agent-runtime.md): Agent execution environment, sandbox, and consent token verification.
-- [04-cicd-polymorphism.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/04-cicd-polymorphism.md): Polymorphic diversification, `.jkm` specification, and attestation.
-- [05-manager-and-cloud.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/05-manager-and-cloud.md): Central management server and audit logging.
-- [05-multi-language-toolchain.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/05-multi-language-toolchain.md): Polyglot build system, environments, and CI orchestration.
-- [06-frontend-dashboard.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/06-frontend-dashboard.md): Forensic investigation dashboard specification.
-- [07-security-and-ops.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/07-security-and-ops.md): Operational security, key management, and deployment guidelines.
-- [08-testing-plan.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/08-testing-plan.md): Test methodology, differential testing, and fuzzing plan.
-- [runbook.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/runbook.md): Incident responder operator runbook.
-- [GLOSSARY.md](file:///c:/Users/Aryan/Desktop/sihmaim/docs/GLOSSARY.md): Comprehensive DFIR and JOCKY terminology reference.
+- [00-blueprint.md](docs/00-blueprint.md): Complete architecture blueprint, constraints, and non-goals.
+- [01-threat-model.md](docs/01-threat-model.md): Threat model, trust boundaries, and consent framework.
+- [02-language-and-compiler.md](docs/02-language-and-compiler.md): JOCKY language grammar and compiler architecture.
+- [03-typechecker-and-codegen.md](docs/03-typechecker-and-codegen.md): Type system, HIR, and LLVM 17 IR lowering.
+- [03-agent-runtime.md](docs/03-agent-runtime.md): Agent execution environment, sandbox, and consent token verification.
+- [04-cicd-polymorphism.md](docs/04-cicd-polymorphism.md): Polymorphic diversification, `.jkm` specification, and attestation.
+- [05-manager-and-cloud.md](docs/05-manager-and-cloud.md): Central management server and audit logging.
+- [05-multi-language-toolchain.md](docs/05-multi-language-toolchain.md): Polyglot build system, environments, and CI orchestration.
+- [06-frontend-dashboard.md](docs/06-frontend-dashboard.md): Forensic investigation dashboard specification.
+- [07-security-and-ops.md](docs/07-security-and-ops.md): Operational security, key management, and deployment guidelines.
+- [08-testing-plan.md](docs/08-testing-plan.md): Test methodology, differential testing, and fuzzing plan.
+- [runbook.md](docs/runbook.md): Incident responder operator runbook.
+- [GLOSSARY.md](docs/GLOSSARY.md): Comprehensive DFIR and JOCKY terminology reference.
 
 ---
 
 ## 11. Community & Governance
 
-- **Security Policy**: See [SECURITY.md](file:///c:/Users/Aryan/Desktop/sihmaim/SECURITY.md) for vulnerability disclosure guidelines.
-- **Contributing**: Read [CONTRIBUTING.md](file:///c:/Users/Aryan/Desktop/sihmaim/CONTRIBUTING.md) before opening pull requests.
-- **Code of Conduct**: JOCKY adheres to the Contributor Covenant v2.1. See [CODE_OF_CONDUCT.md](file:///c:/Users/Aryan/Desktop/sihmaim/CODE_OF_CONDUCT.md).
+- **Security Policy**: See [SECURITY.md](SECURITY.md) for vulnerability disclosure guidelines.
+- **Contributing**: Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening pull requests.
+- **Code of Conduct**: JOCKY adheres to the Contributor Covenant v2.1. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ---
 
 ## 12. License
 
-Licensed under the Apache License, Version 2.0. See [LICENSE](file:///c:/Users/Aryan/Desktop/sihmaim/LICENSE) for details.
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
 
 Copyright © 2026 The JOCKY Authors.
 
