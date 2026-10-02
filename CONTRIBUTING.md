@@ -49,12 +49,12 @@ To maintain the project's strict defensive posture:
   - Windows: Conda-forge `llvmdev` in the `llvm17` environment.
 
     ```powershell
-    $env:LLVM_SYS_170_PREFIX = "C:\Users\Aryan\miniconda3\envs\llvm17\Library"
-    $env:Path = "C:\Users\Aryan\miniconda3\envs\llvm17\Library\bin;" + $env:Path
+    $env:LLVM_SYS_170_PREFIX = "$HOME\miniconda3\envs\llvm17\Library" # Or your LLVM 17 install path
+    $env:Path = "$env:LLVM_SYS_170_PREFIX\bin;" + $env:Path
     ```
 
   - Linux: `sudo apt-get install llvm-17-dev clang-17`
-- **Go 1.22+** and **Python 3.10+** (with `blake3` and `ciborium`).
+- **Go 1.22+**, **Node.js 18+**, and **Python 3.10+** (with `blake3`).
 
 ### Running the Test Suite
 

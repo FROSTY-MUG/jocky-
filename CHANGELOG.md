@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **STEP 3 — Central Manager Service (`manager/go`)**:
+  - Implemented complete, concurrent-safe in-memory store preloaded with realistic fleet endpoints, stdlib forensic scripts, and threat findings.
+  - Developed RESTful API endpoints for agent management, heartbeats, status quarantine/reinstatement, and job dispatching.
+  - Implemented cryptographic RFC 8949 consent token generation bound by ticket ID, scope targets, and validity window.
+  - Built tamper-evident append-only cryptographic audit logging with SHA-256 hash chaining and automated `/api/v1/audit/verify` validation.
+  - Built container attestation verification endpoint (`/api/v1/verify-jkm`) enforcing `JKM\x01` magic and section digests.
+  - Added comprehensive automated unit tests for store and API with 100% pass rate.
+- **STEP 3 — DFIR Operations Dashboard (`frontend`)**:
+  - Added full build infrastructure: `vite.config.ts`, `tailwind.config.js`, `postcss.config.js`, and `tsconfig.json`.
+  - Configured cyber dark-mode design system with glassmorphism, Google Fonts (`Inter`, `JetBrains Mono`), and glowing accents.
+  - Built 7 interactive operational views:
+    - **Fleet Overview**: Health strips, live manager connectivity status, alert banners, and active job/finding previews.
+    - **Agents & Consent**: Interactive search/filtering by platform/state, polymorphic variant index inspector, collector health diagnostics, and host quarantine/reinstate modal.
+    - **JOCKY Script IDE**: Code editor loaded with all 6 stdlib forensic scripts (`detect_byovd.jky`, `detect_inject.jky`, etc.), real-time AST capability denylist validator (testing all 23 forbidden primitives), and seed-based polymorphic diversification visualizer with lowered IR preview.
+    - **Forensic Job Composer**: 5-step interactive incident response wizard with consent token generation and live execution stream.
+    - **Threat Findings Workbench**: Threat inspection with MITRE ATT&CK technique tags (`T1068`, `T1055`, `T1106`), trust level indicators, and raw artifact JSON inspector.
+    - **`.jkm` Container Verifier**: In-browser attestation inspector for 64-byte headers, CBOR manifests, and Ed25519 signatures.
+    - **Cryptographic Audit Stream**: Chronological event ledger with live SHA-256 chain verification button and JSON export.
+- **STEP 3 — Windows Agent In-Process Loader (`agent/windows`)**:
+  - Implemented `InProcessLoader` in `agent/windows/src/loader.rs` with `JKM\x01` magic verification, consent token gate enforcement, and memory boundary safety.
+  - Added `--version` and `--test-loader` CLI flags in `agent/windows/src/main.rs`.
+
+### Fixed
+
+- Replaced broken author-specific absolute paths (`file:///c:/Users/Aryan/Desktop/sihmaim/...`) with clean relative links across `README.md`, `docs/README.md`, and interface specs.
+- Fixed hardcoded LLVM path in `compiler/tests/codegen_test.rs` to dynamically detect `LLVM_SYS_170_PREFIX`.
+- Corrected path traversal bug in `Makefile` target `go-build` (`cd manager/go` instead of `cd ../../manager/go`).
+- Removed invalid `ciborium` package from `ci/py/requirements.txt` and verified Python CI tools with `blake3`.
+
 ## [0.1.0] - 2026-09-27
 
 ### Added

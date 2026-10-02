@@ -38,11 +38,13 @@ fn assert_valid_elf64_x86_64(path: &PathBuf) {
 }
 
 fn run_llvm_tool(tool: &str, args: &[&str]) -> String {
-    let candidates = [
-        format!("C:\\Users\\Aryan\\miniconda3\\envs\\llvm17\\Library\\bin\\{}.exe", tool),
+    let mut candidates = vec![
         format!("{}.exe", tool),
         tool.to_string(),
     ];
+    if let Ok(prefix) = std::env::var("LLVM_SYS_170_PREFIX") {
+        candidates.insert(0, format!("{}\\bin\\{}.exe", prefix, tool));
+    }
 
     for c in &candidates {
         if let Ok(output) = Command::new(c).args(args).output() {
