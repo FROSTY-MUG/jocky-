@@ -1,2 +1,2 @@
-blake3>=1.0.0
+blake3>=1.0.10
 ciborium>=0.2.0
