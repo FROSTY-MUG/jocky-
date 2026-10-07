@@ -20,7 +20,7 @@ sha2 = "0.10"
 chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1.0"
 jocky-common = { path = "../agent/common" }
-inkwell = { version = "0.4", features = ["llvm17-0"] }
+inkwell = { version = "0.10", features = ["llvm17-0"] }
 llvm-sys = "170"
 rand_chacha = "0.3"
 hex = "0.4"
